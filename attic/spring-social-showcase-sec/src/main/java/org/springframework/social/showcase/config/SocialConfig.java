@@ -46,6 +46,8 @@ import org.springframework.social.showcase.facebook.PostToWallAfterConnectInterc
 import org.springframework.social.showcase.twitter.TweetAfterConnectInterceptor;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+import org.springframework.social.wechat.api.Wechat;
+import org.springframework.social.wechat.connect.WechatConnectionFactory;
 
 /**
  * Spring Social Configuration.
@@ -65,6 +67,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
 		cfConfig.addConnectionFactory(new TwitterConnectionFactory(env.getProperty("twitter.appKey"), env.getProperty("twitter.appSecret")));
 		cfConfig.addConnectionFactory(new FacebookConnectionFactory(env.getProperty("facebook.appKey"), env.getProperty("facebook.appSecret")));
 		cfConfig.addConnectionFactory(new LinkedInConnectionFactory(env.getProperty("linkedin.appKey"), env.getProperty("linkedin.appSecret")));
+		cfConfig.addConnectionFactory(new WechatConnectionFactory(env.getProperty("wechat.appKey"), env.getProperty("wechat.appSecret")));
 	}
 	
 	@Override
@@ -122,6 +125,13 @@ public class SocialConfig extends SocialConfigurerAdapter {
 	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
 	public LinkedIn linkedin(ConnectionRepository repository) {
 		Connection<LinkedIn> connection = repository.findPrimaryConnection(LinkedIn.class);
+		return connection != null ? connection.getApi() : null;
+	}
+
+	@Bean
+	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
+	public Wechat wechat(ConnectionRepository repository) {
+		Connection<Wechat> connection = repository.findPrimaryConnection(Wechat.class);
 		return connection != null ? connection.getApi() : null;
 	}
 
